@@ -1,4 +1,4 @@
-# React-Redux
+# 初识React-Redux
 ***
 ```
 React-Redux将所有组件分成两大类：__UI 组件__（presentational component）和 __容器组件__（container component）。
