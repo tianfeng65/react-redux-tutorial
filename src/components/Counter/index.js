@@ -8,7 +8,7 @@ import {connect} from 'react-redux'
 function Counter (props) {
   return (
     <div>
-      <span>{props.value}</span>
+      <span>value:{props.value}</span>
       <button onClick={props.onIncreaseClick}>Increase</button>
       <button onClick={props.onDecreaseClick}>Decrease</button>
       <button onClick={props.onResetClick}>Reset</button>
@@ -16,11 +16,9 @@ function Counter (props) {
   )
 }
 
-// 定义value到state的映射，
-function mapStateToProps (state/*, ownProps*/) {
-  return {
-    value: state.count
-  }
+// 定义value到state的映射，这里通过最顶层的Provider拿到state。
+const mapStateToProps = state => {
+  return {value: state.counter.count}
 }
 
 // 使用函数形式的mapDispatchToProps建立 UI 组件的参数到 store.dispatch方法的映射。

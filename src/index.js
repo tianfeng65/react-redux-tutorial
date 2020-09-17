@@ -1,29 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux'
-import {createStore} from 'redux'
-import Counter from './Counter'
+import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 
-// reducer
-function counter(state = {count: 0}, action) {
-  const count = state.count
-  switch (action.type) {
-    case 'increase': 
-      return {count: count+1}
-    case 'decrease': 
-      return {count: count-1}
-    case 'reset': 
-      return {count: 0}
-    default: 
-      return state
-  }
+import store from './redux/store'
+import Counter from './components/Counter'
+import TodoList from './components/TodoList'
+
+function App() {
+  return (
+    <div>
+      <h1>Welcome</h1>
+      
+      <Router>
+        <ul>
+          <li>
+            <Link to="/counter">go to counter</Link>
+          </li>
+          <li>
+            <Link to="/todo-list">go to todo-list</Link>
+          </li>
+        </ul>
+
+        <Route path="/counter" component={Counter}></Route>
+        <Route path="/todo-list" component={TodoList}></Route>
+      </Router>
+    </div>
+  )
 }
-// store
-const store = createStore(counter)
 
 ReactDOM.render(
   <Provider store={store}>
-    <Counter/>
+    <App/>
   </Provider>,
   document.getElementById('root')
 );
