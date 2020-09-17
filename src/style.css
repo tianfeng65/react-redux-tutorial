@@ -1,8 +1,18 @@
-/* todo */
+/* Todo */
 .todo-status{
   margin-right: 10px;
 }
 .todo-content-completed{
   text-decoration: line-through;
   color: lightgray;
+}
+/* VisibilityFilter */
+.visibility-filter{
+
+}
+.selector{
+  margin-right: 10px;
+}
+.selector-active{
+  border-bottom: 1px solid black;
 }
