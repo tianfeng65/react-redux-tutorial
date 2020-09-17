@@ -1,11 +1,30 @@
 import React from 'react'
 import { connect } from 'react-redux'
-// import {toggleTodo} from '../redux/actions'
+import cx from "classnames"
+import '../../style.css'
 
-function Todo (props) {
+
+
+function Todo ({todo, toggleTodo}) {
   return (
-    <div>{props.todo}</div>
+    <li className="todo" onClick={() => toggleTodo(todo.id)}>
+      <span className="todo-status">{todo.completed ? '👌' : '👏'}</span>
+      <span className={cx("todo-content", todo.completed ? "todo-content-completed" : "")}>{todo.content}</span>
+    </li>
   )
 }
 
-export default connect()(Todo)
+const mapActionsToProps = {
+  toggleTodo(id) {
+    return {
+      type: 'toggleTodo',
+      payload: {
+        id
+      }
+    }
+  }
+}
+export default connect(
+  null,
+  mapActionsToProps
+)(Todo)

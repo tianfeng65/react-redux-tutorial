@@ -2,14 +2,13 @@ import React from 'react'
 import {connect} from 'react-redux'
 import AddTodo from './AddTodo'
 import Todo from './Todo'
-function TodoList (props) {
-  const {todoList} = props
+function TodoList ({todoList}) {
   return (
     <div>
       <AddTodo/>
       <ul>
         {todoList.length 
-          ? todoList.map((todo,index) => <Todo key={index} todo={todo}></Todo>)
+          ? todoList.map(todo => <Todo key={todo.id} todo={todo}></Todo>)
           : null
         }
       </ul>

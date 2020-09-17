@@ -20,12 +20,13 @@ function AddTodo (props) {
     setInput('')
   }
 }
-
+let nextTodoId = 0
 const mapDispatchToProps = {
-  addTodo: input => ({
+  addTodo: content => ({
     type: 'addTodo',
     payload: {
-      content: input
+      id: ++nextTodoId,
+      content
     }
   })
 }
