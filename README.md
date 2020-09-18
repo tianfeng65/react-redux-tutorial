@@ -97,6 +97,56 @@ const mapStateToProps = (state, ownProps) => {
 ```
 当然connect方法也可以省略mapStateToProps参数，那样的话，UI 组件就不会订阅Store，就是说 Store 的更新不会引起 UI 组件的更新。
 
+__使用指南__
+
+- 使用mapStateToProps重塑来自Store的数据
+
+mapStateToProps函数可以而且应该做的不仅仅是返回state.someSlice。它们负责根据组件的需要“重塑”store数据。这可能包括返回一个值作为特定的prop名称，组合来自状态树不同部分的数据片段，以及以不同的方式转换store数据。
+
+- 使用选择器函数来提取和转换数据
+
+我们强烈鼓励使用“选择器”功能来帮助封装从状态树中特定位置提取值的过程。记忆化的选择器功能在提高应用程序性能方面也起着关键作用。
+
+- mapStateToProps函数应该是快速的
+
+
+每当存储更改时，所有连接组件的所有mapStateToProps函数都将运行。因此，你的mapStateToProps函数应该尽可能快地运行。这也意味着缓慢的mapStateToProps函数可能成为应用程序性能的潜在瓶颈。
+作为“重塑数据”思想的一部分，mapStateToProps函数经常需要以各种方式转换数据(例如过滤数组、将id数组映射到对应的对象、或从不变JS对象中提取纯JS值)。无论是执行转换的成本，还是组件是否重新呈现结果，这些转换通常都是昂贵的。如果关注性能，请确保只有在输入值发生更改时才运行这些转换。
+
+- mapStateToProps函数应该是纯同步的
+
+与Redux reducer类似，mapStateToProps函数应该始终是100%纯且同步的。它应该只接受状态(和ownProps)作为参数，并返回组件所需的数据作为参数，而不改变这些参数。不应该使用它来触发像AJAX调用那样的异步行为来获取数据，并且不应该将函数声明为异步。
+
+__细节和技巧__
+
+- 返回值决定组件是否重新呈现
+
+React Redux在内部实现了shouldComponentUpdate方法，以便包装器组件在组件所需的数据发生更改时准确地重新呈现。默认情况下，React Redux使用===比较（“浅相等性”检查）在返回对象的每个字段上确定从mapStateToProps返回的对象的内容是否不同。如果任何字段已更改，则将重新渲染您的组件，以便它可以将更新的值作为prop接收。__请注意，返回具有相同引用的变异对象是一个常见错误，它可能导致组件在预期时无法重新呈现。__ 
+
+例如在TodoList实例中，每次dispatch都对store中的todoList进行了引用替换，在改变todo的完成状态时，也对该todo进行了引用替换，不然都不会触发re-render。
+
+- 只在需要时返回新对象引用
+
+React Redux进行了浅层比较，以查看mapStateToProps结果是否已更改。每次很容易意外返回新的对象或数组引用，即使数据实际上相同，这也会导致您的组件重新呈现。
+
+以下是许多常见的创建新的对象或数组引用的操作：
+
+  - 使用someArray.map（）或someArray.filter（）创建新数组
+  - 使用array.concat合并数组
+  - 使用array.slice截取数组的一部分
+  - 用Object.assign复制对象
+  - 使用扩展运算符{... oldState，... newData}复制
+
+__行为和陷阱__
+
+- 如果存储状态相同，则mapStateToProps将不会运行
+
+由connect生成的包装器组件订阅Redux存储。每次dispatch action时，它都会调用store.getState（）并检查 __lastState === currentState__。如果两个状态值通过引用相同，则它将不会重新运行mapStateToProps函数，因为它假定其余存储状态均未更改。所以在TodoList实例中，每次都将todoList进行了拆箱装箱处理，以确保它的引用发生了改变，从而触发re-render。
+
+- 声明的参数数量影响行为
+
+使用just（state），只要根存储状态对象不同，该函数就会运行。使用（state，ownProps），它可以在存储状态不同的任何时候运行，并且在包装器属性发生更改时也可以运行。这意味着除非您实际需要使用它，否则不应该添加ownProps参数，否则您的mapStateToProps函数将比其所需的运行时间更多。
+
 ## 五、mapDispatchToProps()
 mapDispatchToProps是connect函数的第二个参数，用来建立 UI 组件的参数到store.dispatch方法的映射。也就是说，它定义了哪些用户的操作应该当作 Action，传给 Store。它可以是一个函数，也可以是一个对象。
 
