@@ -83,7 +83,7 @@ mapStateToProps会订阅 Store，每当state更新的时候，就会自动执行
 
 mapStateToProps的第一个参数总是state对象，还可以使用第二个参数，代表容器组件的props对象。
 ```javascript
-// 容器组件
+// 容器组件f
 <FilterLink filter="SHOW_ALL">
   All
 </FilterLink>
@@ -202,14 +202,20 @@ render(
 
 ## 七、例子：计数器
 git clone
+
 npm i
+
 npm run start
+
 访问：http://localhost:3000/counter
 
 ## 八、例子：TodoList
 git clone
+
 npm i
+
 npm run start
+
 访问：http://localhost:3000/todo-list
 
 
